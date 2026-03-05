@@ -3,532 +3,255 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EYROX // VFX & DEV</title>
+<title>EYROX // VFX &amp; DEV</title>
 <style>
-/* =========================================
-   KALI LINUX TERMINAL COLORS - NO EXTERNAL DEPS
-   bg:       #12121e
-   text:     #f8f8f2
-   green:    #50fa7b
-   cyan:     #8be9fd
-   red:      #ff5555
-   yellow:   #f1fa8c
-   magenta:  #ff79c6
-   blue:     #4e9af1
-   orange:   #ffb86c
-   dim:      #6272a4
-   ========================================= */
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: #12121e;
-  color: #f8f8f2;
-  font-family: 'Consolas', 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
-  font-size: 14px;
-  overflow-x: hidden;
-  cursor: none;
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:#12121e;
+  color:#f8f8f2;
+  font-family:Consolas,'Cascadia Code','Fira Code','Courier New',monospace;
+  font-size:14px;
+  overflow-x:hidden;
+  cursor:none;
 }
 
-/* ── CUSTOM CURSOR ── */
-#CUR {
-  position: fixed; width: 20px; height: 20px;
-  border: 1px solid #8be9fd; border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%,-50%);
-  transition: width .15s, height .15s;
-  mix-blend-mode: screen;
-}
-#CUR2 {
-  position: fixed; width: 4px; height: 4px;
-  background: #8be9fd; border-radius: 50%;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%,-50%);
-  box-shadow: 0 0 8px #8be9fd;
-}
-body.hov #CUR { width: 36px; height: 36px; border-color: #ff79c6; }
+/* CURSOR */
+#C1{position:fixed;width:20px;height:20px;border:1px solid #8be9fd;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;mix-blend-mode:screen;}
+#C2{position:fixed;width:4px;height:4px;background:#8be9fd;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 8px #8be9fd;}
+body.hov #C1{width:36px;height:36px;border-color:#ff79c6;}
 
-/* ── SCANLINES ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background: repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,0,0,.06) 2px, rgba(0,0,0,.06) 4px
-  );
-  pointer-events: none; z-index: 997;
-}
+/* SCANLINES */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:997;}
 
-/* ── BOOT SCREEN ── */
-#BOOT {
-  position: fixed; inset: 0;
-  background: #12121e;
-  z-index: 900;
-  padding: 48px 56px;
-  font-size: 13px;
-  line-height: 1.9;
-  overflow: hidden;
-}
-#BOOT.hide {
-  animation: bootfade .5s ease forwards;
-}
-@keyframes bootfade { to { opacity: 0; pointer-events: none; } }
+/* BOOT */
+#BOOT{position:fixed;inset:0;background:#12121e;z-index:900;padding:48px 56px;font-size:13px;line-height:1.9;overflow:hidden;}
+#BOOT.hide{opacity:0;pointer-events:none;transition:opacity .5s;}
+.bl{opacity:0;white-space:pre;}
+.bl.v{opacity:1;}
+.ok{color:#50fa7b;}.inf{color:#8be9fd;}.wrn{color:#f1fa8c;}.dim{color:#6272a4;}.wht{color:#f8f8f2;}
 
-.bl { opacity: 0; white-space: pre; }
-.bl.v { opacity: 1; }
-.ok  { color: #50fa7b; }
-.inf { color: #8be9fd; }
-.wrn { color: #f1fa8c; }
-.dim { color: #6272a4; }
-.wht { color: #f8f8f2; }
+/* TOPBAR */
+.TB{position:fixed;top:0;left:0;right:0;height:29px;background:#09090f;border-bottom:1px solid rgba(78,154,241,.4);display:flex;align-items:center;padding:0 16px;z-index:500;gap:12px;font-size:11px;color:#6272a4;}
+.TB-mid{flex:1;text-align:center;color:#6272a4;letter-spacing:2px;}
+.TB-mid b{color:#f8f8f2;}
+.TB-r{display:flex;gap:16px;font-size:10px;}
+.live{color:#50fa7b;}
+.DOTS{display:flex;gap:5px;align-items:center;}
+.D{width:11px;height:11px;border-radius:50%;}
+.DR{background:#ff5f57;}.DY{background:#ffbd2e;}.DG{background:#28ca41;}
+.BL{animation:blink 1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* ── TOPBAR ── */
-.TB {
-  position: fixed; top: 0; left: 0; right: 0; height: 29px;
-  background: #09090f;
-  border-bottom: 1px solid rgba(78,154,241,.4);
-  display: flex; align-items: center;
-  padding: 0 16px; z-index: 500; gap: 12px;
-  font-size: 11px; color: #6272a4;
-}
-.TB-mid { flex: 1; text-align: center; color: #6272a4; letter-spacing: 2px; }
-.TB-mid b { color: #f8f8f2; }
-.TB-r { display: flex; gap: 16px; font-size: 10px; }
-.live { color: #50fa7b; }
-.DOTS { display: flex; gap: 5px; align-items: center; }
-.D { width: 11px; height: 11px; border-radius: 50%; }
-.DR { background: #ff5f57; }
-.DY { background: #ffbd2e; }
-.DG { background: #28ca41; }
+/* NAV */
+nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:400;display:flex;flex-direction:column;gap:16px;align-items:flex-end;}
+.NV{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.NV-L{font-size:9px;color:#6272a4;letter-spacing:2px;opacity:0;transition:opacity .2s;white-space:nowrap;}
+.NV:hover .NV-L{opacity:1;}
+.NV-D{width:7px;height:7px;border:1px solid #6272a4;transform:rotate(45deg);transition:background .2s,border-color .2s,box-shadow .2s;}
+.NV.A .NV-D,.NV:hover .NV-D{background:#8be9fd;border-color:#8be9fd;box-shadow:0 0 10px #8be9fd;}
 
-/* ── BLINK ── */
-.BL { animation: blink 1s step-end infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+/* MAIN */
+main{padding-top:29px;}
 
-/* ── SIDE NAV ── */
-nav {
-  position: fixed; right: 20px; top: 50%;
-  transform: translateY(-50%);
-  z-index: 400;
-  display: flex; flex-direction: column; gap: 16px; align-items: flex-end;
-}
-.NV { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-.NV-L {
-  font-size: 9px; color: #6272a4; letter-spacing: 2px;
-  opacity: 0; transition: opacity .2s; white-space: nowrap;
-}
-.NV:hover .NV-L { opacity: 1; }
-.NV-D {
-  width: 7px; height: 7px;
-  border: 1px solid #6272a4;
-  transform: rotate(45deg);
-  transition: background .2s, border-color .2s, box-shadow .2s;
-}
-.NV.A .NV-D, .NV:hover .NV-D {
-  background: #8be9fd; border-color: #8be9fd;
-  box-shadow: 0 0 10px #8be9fd;
-}
+/* HERO */
+#hero{min-height:100vh;padding:70px 60px 60px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+#MC{position:absolute;inset:0;width:100%;height:100%;opacity:.055;pointer-events:none;}
 
-/* ── MAIN ── */
-main { padding-top: 29px; }
+/* KALI PROMPT */
+.KP{display:flex;align-items:center;font-size:14px;margin-bottom:3px;}
+.KPU{color:#4e9af1;font-weight:700;}
+.KPH{color:#268bd2;font-weight:700;}
+.KPP{color:#8be9fd;}
+.KPT{color:#f8f8f2;}
+.CMD{font-size:14px;color:#f8f8f2;display:flex;align-items:center;gap:5px;}
+.CMDP{color:#6272a4;}
 
-/* ── HERO ── */
-#hero {
-  min-height: 100vh;
-  padding: 70px 60px 60px;
-  display: flex; flex-direction: column; justify-content: center;
-  position: relative; overflow: hidden;
-}
+/* NMAP */
+#NM{margin-top:16px;font-size:13px;line-height:1.85;}
+.NL{opacity:0;transform:translateX(-6px);transition:opacity .1s,transform .1s;}
+.NL.V{opacity:1;transform:none;}
+.NP{color:#8be9fd;}.NO{color:#50fa7b;font-weight:700;}.NS{color:#ffb86c;}.NV2{color:#6272a4;}.NH{color:#4e9af1;}.NI{color:#6272a4;}.NW{color:#f1fa8c;}
 
-/* matrix canvas */
-#MC {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  opacity: .055; pointer-events: none;
-}
+/* NAME */
+.NAME{margin-top:36px;font-size:clamp(52px,9vw,108px);font-weight:900;letter-spacing:-3px;line-height:1;color:#f8f8f2;position:relative;text-shadow:0 0 60px rgba(78,154,241,.18);}
+.NAME .CY{color:#8be9fd;}
+.NAME::before{content:attr(data-t);position:absolute;top:0;left:0;color:#8be9fd;opacity:.1;clip-path:polygon(0 30%,100% 30%,100% 48%,0 48%);transform:translateX(-3px);animation:G1 3s infinite linear alternate-reverse;}
+.NAME::after{content:attr(data-t);position:absolute;top:0;left:0;color:#ff79c6;opacity:.09;clip-path:polygon(0 65%,100% 65%,100% 80%,0 80%);transform:translateX(3px);animation:G2 4s infinite linear alternate-reverse;}
+@keyframes G1{0%{clip-path:polygon(0 2%,100% 2%,100% 6%,0 6%);transform:translateX(-4px)}40%{clip-path:polygon(0 42%,100% 42%,100% 47%,0 47%);transform:translateX(4px)}80%{clip-path:polygon(0 78%,100% 78%,100% 83%,0 83%);transform:translateX(-4px)}}
+@keyframes G2{0%{clip-path:polygon(0 20%,100% 20%,100% 25%,0 25%);transform:translateX(3px)}50%{clip-path:polygon(0 55%,100% 55%,100% 60%,0 60%);transform:translateX(-3px)}}
 
-/* kali prompt */
-.KP { display: flex; align-items: center; font-size: 14px; margin-bottom: 3px; }
-.KP-U { color: #4e9af1; font-weight: 700; }
-.KP-H { color: #268bd2; font-weight: 700; }
-.KP-P { color: #8be9fd; }
-.KP-T { color: #f8f8f2; }
+.SUB{margin-top:10px;font-size:12px;color:#6272a4;letter-spacing:5px;text-transform:uppercase;}
+.TAGS{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.TAG{font-size:10px;color:#8be9fd;border:1px solid rgba(139,233,253,.35);padding:3px 12px;letter-spacing:2px;text-transform:uppercase;opacity:.75;transition:opacity .2s,box-shadow .2s;}
+.TAG:hover{opacity:1;box-shadow:0 0 12px rgba(139,233,253,.2);}
 
-.CMD { font-size: 14px; color: #f8f8f2; display: flex; align-items: center; gap: 5px; }
-.CMD-P { color: #6272a4; }
+.SBAR{display:flex;gap:24px;margin-top:26px;padding:10px 16px;border:1px solid rgba(78,154,241,.2);background:#0e0e1a;font-size:11px;width:fit-content;}
+.SI{display:flex;align-items:center;gap:8px;color:#6272a4;}
+.SD{width:6px;height:6px;border-radius:50%;animation:SP 2s ease-in-out infinite;}
+.SD.G{background:#50fa7b;box-shadow:0 0 6px #50fa7b;}
+.SD.C{background:#8be9fd;box-shadow:0 0 6px #8be9fd;}
+.SD.Y{background:#f1fa8c;box-shadow:0 0 6px #f1fa8c;}
+@keyframes SP{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* nmap output */
-#NM { margin-top: 16px; font-size: 13px; line-height: 1.85; }
-.NL { opacity: 0; transform: translateX(-6px); transition: opacity .1s, transform .1s; }
-.NL.V { opacity: 1; transform: none; }
-.NP { color: #8be9fd; }
-.NO { color: #50fa7b; font-weight: 700; }
-.NS { color: #ffb86c; }
-.NV2 { color: #6272a4; }
-.NH { color: #4e9af1; }
-.NI { color: #6272a4; }
-.NW { color: #f1fa8c; }
+.SCR{position:absolute;bottom:36px;left:60px;display:flex;flex-direction:column;gap:6px;font-size:10px;color:#6272a4;letter-spacing:2px;}
+.SCRL{width:1px;height:34px;background:linear-gradient(180deg,#8be9fd,transparent);animation:SHa 2s ease-in-out infinite;}
+@keyframes SHa{0%,100%{opacity:.3}50%{opacity:1}}
 
-/* big name */
-.NAME {
-  margin-top: 36px;
-  font-size: clamp(52px, 9vw, 108px);
-  font-weight: 900;
-  letter-spacing: -3px;
-  line-height: 1;
-  color: #f8f8f2;
-  position: relative;
-  text-shadow: 0 0 60px rgba(78,154,241,.18);
-}
-.NAME .CY { color: #8be9fd; }
-.NAME::before {
-  content: attr(data-t);
-  position: absolute; top: 0; left: 0;
-  color: #8be9fd; opacity: .1;
-  clip-path: polygon(0 30%,100% 30%,100% 48%,0 48%);
-  transform: translateX(-3px);
-  animation: G1 3s infinite linear alternate-reverse;
-}
-.NAME::after {
-  content: attr(data-t);
-  position: absolute; top: 0; left: 0;
-  color: #ff79c6; opacity: .09;
-  clip-path: polygon(0 65%,100% 65%,100% 80%,0 80%);
-  transform: translateX(3px);
-  animation: G2 4s infinite linear alternate-reverse;
-}
-@keyframes G1 {
-  0%  { clip-path:polygon(0 2%,100% 2%,100% 6%,0 6%);   transform:translateX(-4px) }
-  40% { clip-path:polygon(0 42%,100% 42%,100% 47%,0 47%); transform:translateX(4px) }
-  80% { clip-path:polygon(0 78%,100% 78%,100% 83%,0 83%); transform:translateX(-4px) }
-}
-@keyframes G2 {
-  0%  { clip-path:polygon(0 20%,100% 20%,100% 25%,0 25%); transform:translateX(3px) }
-  50% { clip-path:polygon(0 55%,100% 55%,100% 60%,0 60%); transform:translateX(-3px) }
-}
+/* DIVIDER */
+.DIV{height:1px;background:linear-gradient(90deg,transparent,rgba(78,154,241,.4),transparent);}
 
-.SUB { margin-top: 10px; font-size: 12px; color: #6272a4; letter-spacing: 5px; text-transform: uppercase; }
+/* SECTION */
+.SEC{padding:80px 60px;position:relative;}
+.SH2{display:flex;align-items:center;gap:14px;margin-bottom:44px;}
+.SH2P{color:#6272a4;font-size:13px;}
+.SH2T{color:#8be9fd;font-size:17px;letter-spacing:3px;text-transform:uppercase;}
+.SH2L{flex:1;height:1px;background:linear-gradient(90deg,rgba(78,154,241,.4),transparent);}
 
-/* tags */
-.TAGS { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-.TAG {
-  font-size: 10px; color: #8be9fd;
-  border: 1px solid rgba(139,233,253,.35);
-  padding: 3px 12px; letter-spacing: 2px; text-transform: uppercase;
-  opacity: .75; transition: opacity .2s, box-shadow .2s;
-}
-.TAG:hover { opacity: 1; box-shadow: 0 0 12px rgba(139,233,253,.2); }
+/* TBOX */
+.TBOX{border:1px solid rgba(78,154,241,.35);background:#0e0e1a;position:relative;overflow:hidden;}
+.TBOXB{background:#09090f;border-bottom:1px solid rgba(78,154,241,.2);padding:8px 14px;display:flex;align-items:center;gap:10px;}
+.TBOXT{font-size:11px;color:#6272a4;margin-left:6px;}
+.TBOXD{padding:22px;font-size:13px;line-height:1.9;}
+.CT{position:absolute;top:0;left:0;width:14px;height:14px;border-top:2px solid #8be9fd;border-left:2px solid #8be9fd;}
+.CB{position:absolute;bottom:0;right:0;width:14px;height:14px;border-bottom:2px solid #8be9fd;border-right:2px solid #8be9fd;}
 
-/* status bar */
-.SBAR {
-  display: flex; gap: 24px; margin-top: 26px;
-  padding: 10px 16px;
-  border: 1px solid rgba(78,154,241,.2);
-  background: #0e0e1a;
-  font-size: 11px; width: fit-content;
-}
-.SI { display: flex; align-items: center; gap: 8px; color: #6272a4; }
-.SD {
-  width: 6px; height: 6px; border-radius: 50%;
-  animation: SP 2s ease-in-out infinite;
-}
-.SD.G { background: #50fa7b; box-shadow: 0 0 6px #50fa7b; }
-.SD.C { background: #8be9fd; box-shadow: 0 0 6px #8be9fd; }
-.SD.Y { background: #f1fa8c; box-shadow: 0 0 6px #f1fa8c; }
-@keyframes SP { 0%,100%{opacity:1} 50%{opacity:.3} }
+/* ABOUT */
+.AG{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
 
-/* scroll hint */
-.SH {
-  position: absolute; bottom: 36px; left: 60px;
-  display: flex; flex-direction: column; gap: 6px;
-  font-size: 10px; color: #6272a4; letter-spacing: 2px;
-}
-.SHL { width: 1px; height: 34px; background: linear-gradient(180deg,#8be9fd,transparent);
-  animation: SHa 2s ease-in-out infinite; }
-@keyframes SHa { 0%,100%{opacity:.3} 50%{opacity:1} }
+/* SKILLS */
+.SKG{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;}
+.SKC{border:1px solid rgba(78,154,241,.18);background:#0e0e1a;padding:18px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s;}
+.SKC::after{content:'';position:absolute;bottom:0;left:0;height:2px;width:0;background:linear-gradient(90deg,#4e9af1,#8be9fd);transition:width .4s ease;}
+.SKC:hover{border-color:#8be9fd;box-shadow:0 0 20px rgba(139,233,253,.06);}
+.SKC:hover::after{width:100%;}
+.SKN{font-size:12px;color:#8be9fd;letter-spacing:2px;margin-bottom:12px;}
+.SKN::before{content:'[';color:#6272a4;}.SKN::after{content:']';color:#6272a4;}
+.SKBB{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
+.SKB{height:100%;border-radius:2px;width:0;transition:width 1.2s ease;background:linear-gradient(90deg,#4e9af1,#8be9fd);box-shadow:0 0 8px rgba(139,233,253,.4);}
+.SKP{font-size:10px;color:#6272a4;margin-top:5px;text-align:right;}
 
-/* ── DIVIDER ── */
-.DIV { height: 1px; background: linear-gradient(90deg,transparent,rgba(78,154,241,.4),transparent); }
+/* PROJECTS */
+.PG{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:22px;}
+.PC{border:1px solid rgba(78,154,241,.18);background:#0e0e1a;overflow:hidden;transition:border-color .3s,transform .3s,box-shadow .3s;cursor:pointer;}
+.PC:hover{border-color:#8be9fd;transform:translateY(-5px);box-shadow:0 24px 60px rgba(139,233,253,.06),0 0 0 1px rgba(139,233,253,.12);}
+.PTH{width:100%;aspect-ratio:16/9;background:#06060f;position:relative;overflow:hidden;}
+.PTH img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.82) saturate(.88);transition:transform .4s,filter .4s;}
+.PC:hover .PTH img{transform:scale(1.04);filter:brightness(1) saturate(1.1);}
+.POV{position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,233,253,.05),transparent);opacity:0;transition:opacity .3s;pointer-events:none;}
+.PC:hover .POV{opacity:1;}
+.PPL{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;border:2px solid rgba(255,255,255,.7);border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);font-size:20px;color:#f8f8f2;pointer-events:none;transition:border-color .2s,background .2s,box-shadow .2s,transform .2s,color .2s;}
+.PC:hover .PPL{border-color:#8be9fd;color:#8be9fd;background:rgba(139,233,253,.08);box-shadow:0 0 28px rgba(139,233,253,.35);transform:translate(-50%,-50%) scale(1.1);}
+.PPH{width:100%;height:100%;background:linear-gradient(135deg,#070712,#0e0e24);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.PPHI{font-size:36px;opacity:.22;}
+.PPHL{font-size:9px;color:#6272a4;letter-spacing:3px;text-transform:uppercase;}
+.PIN{padding:18px;border-top:1px solid rgba(78,154,241,.18);}
+.PM{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.PT2{font-size:9px;color:#ffb86c;border:1px solid rgba(255,184,108,.45);padding:2px 8px;letter-spacing:2px;text-transform:uppercase;}
+.PID{font-size:10px;color:#6272a4;}
+.PTI{font-size:13px;color:#f8f8f2;margin-bottom:6px;line-height:1.4;}
+.PDE{font-size:11px;color:#6272a4;line-height:1.7;}
+.PLK{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;color:#4e9af1;text-decoration:none;letter-spacing:1px;border-bottom:1px solid transparent;transition:border-color .2s,color .2s;}
+.PLK:hover{border-bottom-color:#4e9af1;color:#8be9fd;}
 
-/* ── SECTIONS ── */
-.SEC { padding: 80px 60px; position: relative; }
+/* MODAL */
+#MOD{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:950;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+#MOD.open{display:flex;}
+.MI{width:min(880px,96vw);border:1px solid rgba(78,154,241,.4);background:#0e0e1a;box-shadow:0 40px 120px rgba(0,0,0,.8);}
+.MB{background:#09090f;border-bottom:1px solid rgba(78,154,241,.2);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#6272a4;}
+.MC2{cursor:pointer;color:#ff5555;font-size:15px;padding:2px 8px;transition:text-shadow .2s;}
+.MC2:hover{text-shadow:0 0 12px #ff5555;}
+#MFR{width:100%;aspect-ratio:16/9;border:none;display:block;}
 
-.SH2 { display: flex; align-items: center; gap: 14px; margin-bottom: 44px; }
-.SH2-P { color: #6272a4; font-size: 13px; }
-.SH2-T { color: #8be9fd; font-size: 17px; letter-spacing: 3px; text-transform: uppercase; }
-.SH2-L { flex: 1; height: 1px; background: linear-gradient(90deg,rgba(78,154,241,.4),transparent); }
+/* NETWORK */
+.NETG{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+#LL div{line-height:1.9;font-size:11px;animation:LF .4s ease forwards;}
+@keyframes LF{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
 
-/* ── TERMINAL BOX ── */
-.TBOX {
-  border: 1px solid rgba(78,154,241,.35);
-  background: #0e0e1a;
-  position: relative;
-  overflow: hidden;
-}
-.TBOX-B {
-  background: #09090f;
-  border-bottom: 1px solid rgba(78,154,241,.2);
-  padding: 8px 14px;
-  display: flex; align-items: center; gap: 10px;
-}
-.TBOX-T { font-size: 11px; color: #6272a4; margin-left: 6px; }
-.TBOX-BD { padding: 22px; font-size: 13px; line-height: 1.9; }
+/* CONTACT */
+.CG{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;}
+.CC{border:1px solid rgba(78,154,241,.18);background:#0e0e1a;padding:22px;display:flex;align-items:center;gap:14px;text-decoration:none;transition:border-color .3s,box-shadow .3s,transform .2s;position:relative;overflow:hidden;}
+.CC::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(139,233,253,.04),transparent);transition:left .5s;}
+.CC:hover::before{left:100%;}
+.CC:hover{border-color:#8be9fd;box-shadow:0 0 22px rgba(139,233,253,.07);transform:translateX(4px);}
+.CI{font-size:26px;}
+.CPF{font-size:9px;color:#6272a4;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;}
+.CH{font-size:14px;color:#8be9fd;}
+.CA{font-size:14px;color:#6272a4;opacity:0;margin-left:auto;transition:opacity .2s,transform .2s;}
+.CC:hover .CA{opacity:1;transform:translateX(4px);}
 
-/* corner decorations */
-.CT { position: absolute; top: 0; left: 0; width: 14px; height: 14px;
-  border-top: 2px solid #8be9fd; border-left: 2px solid #8be9fd; }
-.CB { position: absolute; bottom: 0; right: 0; width: 14px; height: 14px;
-  border-bottom: 2px solid #8be9fd; border-right: 2px solid #8be9fd; }
+/* FOOTER */
+footer{padding:28px 60px;border-top:1px solid rgba(78,154,241,.2);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#6272a4;}
 
-/* ── ABOUT ── */
-.AG { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-
-/* ── SKILLS ── */
-.SKG { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
-.SKC {
-  border: 1px solid rgba(78,154,241,.18);
-  background: #0e0e1a; padding: 18px;
-  position: relative; overflow: hidden;
-  transition: border-color .3s, box-shadow .3s;
-}
-.SKC::after {
-  content: ''; position: absolute; bottom: 0; left: 0;
-  height: 2px; width: 0;
-  background: linear-gradient(90deg, #4e9af1, #8be9fd);
-  transition: width .4s ease;
-}
-.SKC:hover { border-color: #8be9fd; box-shadow: 0 0 20px rgba(139,233,253,.06); }
-.SKC:hover::after { width: 100%; }
-.SKN { font-size: 12px; color: #8be9fd; letter-spacing: 2px; margin-bottom: 12px; }
-.SKN::before { content: '['; color: #6272a4; }
-.SKN::after  { content: ']'; color: #6272a4; }
-.SKBB { height: 3px; background: rgba(255,255,255,.07); border-radius: 2px; overflow: hidden; }
-.SKB { height: 100%; border-radius: 2px; width: 0; transition: width 1.2s ease;
-  background: linear-gradient(90deg, #4e9af1, #8be9fd);
-  box-shadow: 0 0 8px rgba(139,233,253,.4); }
-.SKP { font-size: 10px; color: #6272a4; margin-top: 5px; text-align: right; }
-
-/* ── PROJECTS ── */
-.PG { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 22px; }
-.PC {
-  border: 1px solid rgba(78,154,241,.18);
-  background: #0e0e1a; overflow: hidden;
-  transition: border-color .3s, transform .3s, box-shadow .3s;
-  cursor: pointer;
-}
-.PC:hover {
-  border-color: #8be9fd; transform: translateY(-5px);
-  box-shadow: 0 24px 60px rgba(139,233,253,.06), 0 0 0 1px rgba(139,233,253,.12);
-}
-.PTH {
-  width: 100%; aspect-ratio: 16/9;
-  background: #06060f; position: relative; overflow: hidden;
-}
-.PTH img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  filter: brightness(.82) saturate(.88);
-  transition: transform .4s, filter .4s;
-}
-.PC:hover .PTH img { transform: scale(1.04); filter: brightness(1) saturate(1.1); }
-.POV {
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(139,233,253,.05), transparent);
-  opacity: 0; transition: opacity .3s; pointer-events: none;
-}
-.PC:hover .POV { opacity: 1; }
-.PPL {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  width: 54px; height: 54px;
-  border: 2px solid rgba(255,255,255,.7); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,.45); font-size: 20px; color: #f8f8f2;
-  pointer-events: none;
-  transition: border-color .2s, background .2s, box-shadow .2s, transform .2s, color .2s;
-}
-.PC:hover .PPL {
-  border-color: #8be9fd; color: #8be9fd;
-  background: rgba(139,233,253,.08);
-  box-shadow: 0 0 28px rgba(139,233,253,.35);
-  transform: translate(-50%,-50%) scale(1.1);
-}
-.PPH {
-  width: 100%; height: 100%;
-  background: linear-gradient(135deg,#070712,#0e0e24);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 10px;
-}
-.PPH-I { font-size: 36px; opacity: .22; }
-.PPH-L { font-size: 9px; color: #6272a4; letter-spacing: 3px; text-transform: uppercase; }
-
-.PIN { padding: 18px; border-top: 1px solid rgba(78,154,241,.18); }
-.PM { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.PT2 {
-  font-size: 9px; color: #ffb86c;
-  border: 1px solid rgba(255,184,108,.45); padding: 2px 8px;
-  letter-spacing: 2px; text-transform: uppercase;
-}
-.PID { font-size: 10px; color: #6272a4; }
-.PTI { font-size: 13px; color: #f8f8f2; margin-bottom: 6px; line-height: 1.4; }
-.PDE { font-size: 11px; color: #6272a4; line-height: 1.7; }
-.PLK {
-  display: inline-flex; align-items: center; gap: 6px;
-  margin-top: 12px; font-size: 11px; color: #4e9af1;
-  text-decoration: none; letter-spacing: 1px;
-  border-bottom: 1px solid transparent;
-  transition: border-color .2s, color .2s;
-}
-.PLK:hover { border-bottom-color: #4e9af1; color: #8be9fd; }
-
-/* ── VIDEO MODAL ── */
-#MOD {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.85);
-  z-index: 950; display: none;
-  align-items: center; justify-content: center;
-  backdrop-filter: blur(8px);
-}
-#MOD.open { display: flex; }
-.MI {
-  width: min(880px, 96vw);
-  border: 1px solid rgba(78,154,241,.4);
-  background: #0e0e1a;
-  box-shadow: 0 40px 120px rgba(0,0,0,.8);
-}
-.MB {
-  background: #09090f;
-  border-bottom: 1px solid rgba(78,154,241,.2);
-  padding: 8px 14px;
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 11px; color: #6272a4;
-}
-.MC2 { cursor: pointer; color: #ff5555; font-size: 15px; padding: 2px 8px;
-  transition: text-shadow .2s; }
-.MC2:hover { text-shadow: 0 0 12px #ff5555; }
-#MFR { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
-
-/* ── NETWORK SECTION ── */
-.NETG { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-#LL div { line-height: 1.9; font-size: 11px; animation: LF .4s ease forwards; }
-@keyframes LF { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:none} }
-
-/* ── CONTACT ── */
-.CG { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
-.CC {
-  border: 1px solid rgba(78,154,241,.18);
-  background: #0e0e1a; padding: 22px;
-  display: flex; align-items: center; gap: 14px;
-  text-decoration: none;
-  transition: border-color .3s, box-shadow .3s, transform .2s;
-  position: relative; overflow: hidden;
-}
-.CC::before {
-  content: ''; position: absolute; top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(139,233,253,.04), transparent);
-  transition: left .5s;
-}
-.CC:hover::before { left: 100%; }
-.CC:hover {
-  border-color: #8be9fd;
-  box-shadow: 0 0 22px rgba(139,233,253,.07);
-  transform: translateX(4px);
-}
-.CI { font-size: 26px; }
-.CPF { font-size: 9px; color: #6272a4; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 3px; }
-.CH { font-size: 14px; color: #8be9fd; }
-.CA { font-size: 14px; color: #6272a4; opacity: 0; margin-left: auto;
-  transition: opacity .2s, transform .2s; }
-.CC:hover .CA { opacity: 1; transform: translateX(4px); }
-
-/* ── FOOTER ── */
-footer {
-  padding: 28px 60px;
-  border-top: 1px solid rgba(78,154,241,.2);
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 11px; color: #6272a4;
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  #hero, .SEC { padding: 40px 20px; }
-  .AG, .NETG { grid-template-columns: 1fr; }
-  nav { display: none; }
-  footer { flex-direction: column; gap: 10px; text-align: center; }
-  .NAME { font-size: 52px; }
-  .SH { left: 20px; }
+/* RESPONSIVE */
+@media(max-width:768px){
+  #hero,.SEC{padding:40px 20px;}
+  .AG,.NETG{grid-template-columns:1fr;}
+  nav{display:none;}
+  footer{flex-direction:column;gap:10px;text-align:center;}
+  .NAME{font-size:52px;}
+  .SCR{left:20px;}
 }
 </style>
 </head>
 <body>
 
-<!-- CURSORS -->
-<div id="CUR"></div>
-<div id="CUR2"></div>
+<div id="C1"></div>
+<div id="C2"></div>
 
-<!-- VIDEO MODAL -->
+<!-- MODAL -->
 <div id="MOD">
   <div class="MI">
     <div class="MB">
       <div class="DOTS"><div class="D DR"></div><div class="D DY"></div><div class="D DG"></div></div>
-      <span id="MTIT" style="color:#f8f8f2">▶ &nbsp;player.sh</span>
-      <span class="MC2" id="MCL">✕ &nbsp;close</span>
+      <span id="MTIT" style="color:#f8f8f2">&#9654; &nbsp;player.sh</span>
+      <span class="MC2" id="MCL">&#10005; &nbsp;close</span>
     </div>
     <iframe id="MFR" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
   </div>
 </div>
 
-<!-- BOOT SCREEN -->
-<div id="BOOT">
-  <div id="BL"></div>
-</div>
+<!-- BOOT -->
+<div id="BOOT"><div id="BL"></div></div>
 
 <!-- TOPBAR -->
 <div class="TB">
   <div class="DOTS"><div class="D DR"></div><div class="D DY"></div><div class="D DG"></div></div>
-  <div class="TB-mid"><b>root@kali</b>:~/portfolio/eyrox — bash</div>
+  <div class="TB-mid"><b>root@kali</b>:~/portfolio/eyrox &mdash; bash</div>
   <div class="TB-r">
     <span id="CLK"></span>
-    <span class="live">● <span class="BL">ONLINE</span></span>
+    <span class="live">&#9679; <span class="BL">ONLINE</span></span>
   </div>
 </div>
 
-<!-- SIDE NAV -->
+<!-- NAV -->
 <nav>
-  <div class="NV A" onclick="GT('hero')">  <span class="NV-L">INIT</span>   <div class="NV-D"></div></div>
-  <div class="NV"   onclick="GT('about')"> <span class="NV-L">ABOUT</span>  <div class="NV-D"></div></div>
-  <div class="NV"   onclick="GT('skills')"><span class="NV-L">SKILLS</span> <div class="NV-D"></div></div>
-  <div class="NV"   onclick="GT('work')">  <span class="NV-L">WORK</span>   <div class="NV-D"></div></div>
-  <div class="NV"   onclick="GT('recon')"> <span class="NV-L">RECON</span>  <div class="NV-D"></div></div>
-  <div class="NV"   onclick="GT('contact')"><span class="NV-L">CONTACT</span><div class="NV-D"></div></div>
+  <div class="NV A"  onclick="GT('hero')"   ><span class="NV-L">INIT</span>   <div class="NV-D"></div></div>
+  <div class="NV"    onclick="GT('about')"  ><span class="NV-L">ABOUT</span>  <div class="NV-D"></div></div>
+  <div class="NV"    onclick="GT('skills')" ><span class="NV-L">SKILLS</span> <div class="NV-D"></div></div>
+  <div class="NV"    onclick="GT('work')"   ><span class="NV-L">WORK</span>   <div class="NV-D"></div></div>
+  <div class="NV"    onclick="GT('recon')"  ><span class="NV-L">RECON</span>  <div class="NV-D"></div></div>
+  <div class="NV"    onclick="GT('contact')"><span class="NV-L">CONTACT</span><div class="NV-D"></div></div>
 </nav>
 
 <main>
 
-<!-- ══════ HERO ══════ -->
+<!-- HERO -->
 <section id="hero">
   <canvas id="MC"></canvas>
-
   <div class="KP">
-    <span class="KP-U">root</span>
-    <span class="KP-T">@</span>
-    <span class="KP-H">kali</span>
-    <span class="KP-T">:</span>
-    <span class="KP-P">~/portfolio/eyrox</span>
-    <span class="KP-T">#</span>
+    <span class="KPU">root</span><span class="KPT">@</span>
+    <span class="KPH">kali</span><span class="KPT">:</span>
+    <span class="KPP">~/portfolio/eyrox</span>
+    <span class="KPT">#</span>
   </div>
-
   <div class="CMD">
-    <span class="CMD-P">$</span>
-    <span id="TCMD"></span><span class="BL" style="color:#8be9fd">█</span>
+    <span class="CMDP">$</span>
+    <span id="TCMD"></span><span class="BL" style="color:#8be9fd">&#9608;</span>
   </div>
-
   <div id="NM"></div>
-
   <div class="NAME" data-t="EYROX"><span class="CY">EY</span>ROX</div>
   <div class="SUB">// Visual Effects Artist &amp; Web Developer</div>
-
   <div class="TAGS">
     <span class="TAG">VFX on Roblox</span>
     <span class="TAG">Frontend</span>
@@ -537,41 +260,36 @@ footer {
     <span class="TAG">JavaScript</span>
     <span class="TAG">Bash</span>
   </div>
-
   <div class="SBAR">
     <div class="SI"><div class="SD G"></div>SYSTEMS ONLINE</div>
     <div class="SI"><div class="SD C"></div>PORTFOLIO LOADED</div>
     <div class="SI"><div class="SD Y"></div>7 PROJECTS FOUND</div>
   </div>
-
-  <div class="SH"><div class="SHL"></div><span>SCROLL</span></div>
+  <div class="SCR"><div class="SCRL"></div><span>SCROLL</span></div>
 </section>
 
 <div class="DIV"></div>
 
-<!-- ══════ ABOUT ══════ -->
+<!-- ABOUT -->
 <section id="about" class="SEC">
   <div class="SH2">
-    <span class="SH2-P">root@kali:~#</span>
-    <span class="SH2-T">cat ./profile.json</span>
-    <div class="SH2-L"></div>
+    <span class="SH2P">root@kali:~#</span>
+    <span class="SH2T">cat ./profile.json</span>
+    <div class="SH2L"></div>
   </div>
   <div class="AG">
-
     <div class="TBOX">
       <div class="CT"></div><div class="CB"></div>
-      <div class="TBOX-B">
+      <div class="TBOXB">
         <div class="DOTS"><div class="D DR"></div><div class="D DY"></div><div class="D DG"></div></div>
-        <span class="TBOX-T">profile.json</span>
+        <span class="TBOXT">profile.json</span>
       </div>
-      <div class="TBOX-BD">
-        <div><span style="color:#6272a4">// ─── SUBJECT PROFILE ───</span></div>
-        <br>
+      <div class="TBOXD">
+        <div><span style="color:#6272a4">// &#8212;&#8212; SUBJECT PROFILE &#8212;&#8212;</span></div><br>
         <div><span style="color:#8be9fd">"alias"</span><span style="color:#6272a4">: </span><span style="color:#f1fa8c">"EYROX"</span>,</div>
         <div><span style="color:#8be9fd">"role"</span><span style="color:#6272a4">: </span><span style="color:#f1fa8c">"VFX Artist + Web Developer"</span>,</div>
         <div><span style="color:#8be9fd">"status"</span><span style="color:#6272a4">: </span><span style="color:#50fa7b">ACTIVE</span>,</div>
-        <div><span style="color:#8be9fd">"threat_level"</span><span style="color:#6272a4">: </span><span style="color:#ffb86c">9.9 / 10</span>,</div>
-        <br>
+        <div><span style="color:#8be9fd">"threat_level"</span><span style="color:#6272a4">: </span><span style="color:#ffb86c">9.9 / 10</span>,</div><br>
         <div><span style="color:#8be9fd">"languages"</span><span style="color:#6272a4">: [</span></div>
         <div style="padding-left:18px"><span style="color:#f1fa8c">"Frontend"</span>,</div>
         <div style="padding-left:18px"><span style="color:#f1fa8c">"Backend"</span>,</div>
@@ -581,22 +299,19 @@ footer {
         <div style="padding-left:18px"><span style="color:#f1fa8c">"JavaScript"</span>,</div>
         <div style="padding-left:18px"><span style="color:#f1fa8c">"Bash"</span>,</div>
         <div style="padding-left:18px"><span style="color:#f1fa8c">"VFX on Roblox"</span></div>
-        <div><span style="color:#6272a4">],</span></div>
-        <br>
+        <div><span style="color:#6272a4">],</span></div><br>
         <div><span style="color:#8be9fd">"open_to"</span><span style="color:#6272a4">: </span><span style="color:#f1fa8c">"Collabs &amp; Commission"</span>,</div>
         <div><span style="color:#8be9fd">"available"</span><span style="color:#6272a4">: </span><span style="color:#50fa7b">true</span></div>
       </div>
     </div>
-
     <div class="TBOX">
       <div class="CT"></div><div class="CB"></div>
-      <div class="TBOX-B">
+      <div class="TBOXB">
         <div class="DOTS"><div class="D DR"></div><div class="D DY"></div><div class="D DG"></div></div>
-        <span class="TBOX-T">nmap_scan.log</span>
+        <span class="TBOXT">nmap_scan.log</span>
       </div>
-      <div class="TBOX-BD">
-        <div><span style="color:#6272a4">// ─── NETWORK PRESENCE ───</span></div>
-        <br>
+      <div class="TBOXD">
+        <div><span style="color:#6272a4">// &#8212;&#8212; NETWORK PRESENCE &#8212;&#8212;</span></div><br>
         <div style="display:grid;grid-template-columns:95px 115px 70px;">
           <span style="color:#4e9af1">PORT</span>
           <span style="color:#4e9af1">SERVICE</span>
@@ -612,144 +327,130 @@ footer {
         <div style="display:grid;grid-template-columns:95px 115px 70px;">
           <span style="color:#8be9fd">6660/tcp</span><span style="color:#ffb86c">discord</span><span style="color:#50fa7b">open</span>
         </div>
-        <div style="display:grid;grid-template-columns:95px 115px 70px;">
-          <span style="color:#8be9fd">1337/tcp</span><span style="color:#ffb86c">vfx-engine</span><span style="color:#50fa7b">open</span>
-        </div>
-        <br>
+
         <div><span style="color:#6272a4">OS: Creator_OS 2.0 (Linux 6.x)</span></div>
-        <div><span style="color:#6272a4">Location: France 🇫🇷</span></div>
-        <div><span style="color:#6272a4">Lang: FR / EN</span></div>
-        <br>
-        <div><span style="color:#f1fa8c">⚠ </span><span style="color:#6272a4">High-value creative target.</span></div>
+        <div><span style="color:#6272a4">Location: France</span></div>
+        <div><span style="color:#6272a4">Lang: FR / EN</span></div><br>
+        <div><span style="color:#f1fa8c">&#9888; </span><span style="color:#6272a4">High-value creative target.</span></div>
       </div>
     </div>
-
   </div>
 </section>
 
 <div class="DIV"></div>
 
-<!-- ══════ SKILLS ══════ -->
+<!-- SKILLS -->
 <section id="skills" class="SEC">
   <div class="SH2">
-    <span class="SH2-P">root@kali:~#</span>
-    <span class="SH2-T">ls -la ./skills/</span>
-    <div class="SH2-L"></div>
+    <span class="SH2P">root@kali:~#</span>
+    <span class="SH2T">ls -la ./skills/</span>
+    <div class="SH2L"></div>
   </div>
   <div class="SKG" id="SKG"></div>
 </section>
 
 <div class="DIV"></div>
 
-<!-- ══════ WORK / PROJECTS ══════ -->
+<!-- WORK -->
 <section id="work" class="SEC">
   <div class="SH2">
-    <span class="SH2-P">root@kali:~#</span>
-    <span class="SH2-T">find ./projects -exec play {}</span>
-    <div class="SH2-L"></div>
+    <span class="SH2P">root@kali:~#</span>
+    <span class="SH2T">find ./projects -exec play {}</span>
+    <div class="SH2L"></div>
   </div>
   <div style="font-size:12px;color:#6272a4;margin-bottom:28px;line-height:1.9;">
-    <div><span style="color:#8be9fd">→</span> Scanning for VFX &amp; web projects...</div>
-    <div><span style="color:#50fa7b">✓</span> Found <span style="color:#f1fa8c">7</span> entries — <span style="color:#ff79c6">click any card to play inline</span></div>
+    <div><span style="color:#8be9fd">&#8594;</span> Scanning for VFX &amp; web projects...</div>
+    <div><span style="color:#50fa7b">&#10003;</span> Found <span style="color:#f1fa8c">7</span> entries &mdash; <span style="color:#ff79c6">click any card to play inline</span></div>
   </div>
   <div class="PG" id="PG"></div>
 </section>
 
 <div class="DIV"></div>
 
-<!-- ══════ RECON / NETWORK ══════ -->
+<!-- RECON -->
 <section id="recon" class="SEC">
   <div class="SH2">
-    <span class="SH2-P">root@kali:~#</span>
-    <span class="SH2-T">netstat -an | grep ESTABLISHED</span>
-    <div class="SH2-L"></div>
+    <span class="SH2P">root@kali:~#</span>
+    <span class="SH2T">netstat -an | grep ESTABLISHED</span>
+    <div class="SH2L"></div>
   </div>
   <div style="font-size:12px;color:#6272a4;margin-bottom:28px;line-height:1.9;">
-    <div><span style="color:#8be9fd">→</span> Sniffing incoming connections on eth0...</div>
-    <div><span style="color:#50fa7b">✓</span> Visitor detected — running passive recon...</div>
+    <div><span style="color:#8be9fd">&#8594;</span> Identifying operator on this node...</div>
+    <div><span style="color:#50fa7b">&#10003;</span> Profile found &mdash; displaying info below.</div>
   </div>
   <div class="NETG">
-
     <div class="TBOX">
       <div class="CT"></div><div class="CB"></div>
-      <div class="TBOX-B">
+      <div class="TBOXB">
         <div class="DOTS"><div class="D DR"></div><div class="D DY"></div><div class="D DG"></div></div>
-        <span class="TBOX-T">visitor_recon.sh — live</span>
-        <span style="margin-left:auto;color:#50fa7b;font-size:10px;" class="BL">● SCANNING</span>
+        <span class="TBOXT">operator_recon.sh</span>
+        <span style="margin-left:auto;color:#50fa7b;font-size:10px;" class="BL">&#9679; ACTIVE</span>
       </div>
-      <div class="TBOX-BD">
-        <div><span style="color:#6272a4">// ─── PASSIVE RECON — YOU ───</span></div>
-        <br>
-        <div><span style="color:#8be9fd">IP Address</span><span style="color:#6272a4">........ </span><span id="RIP" style="color:#f1fa8c">resolving...</span></div>
-        <div><span style="color:#8be9fd">ISP</span><span style="color:#6272a4">............ </span><span id="RISP" style="color:#f8f8f2">—</span></div>
-        <div><span style="color:#8be9fd">Country</span><span style="color:#6272a4">........ </span><span id="RCO" style="color:#f8f8f2">France 🇫🇷</span></div>
-        <div><span style="color:#8be9fd">City</span><span style="color:#6272a4">........... </span><span id="RCI" style="color:#f8f8f2">—</span></div>
-        <div><span style="color:#8be9fd">Timezone</span><span style="color:#6272a4">....... </span><span id="RTZ" style="color:#f8f8f2">—</span></div>
-        <div><span style="color:#8be9fd">Browser</span><span style="color:#6272a4">........ </span><span id="RBR" style="color:#f8f8f2">—</span></div>
-        <div><span style="color:#8be9fd">Screen</span><span style="color:#6272a4">......... </span><span id="RSC" style="color:#f8f8f2">—</span></div>
-        <div><span style="color:#8be9fd">Language</span><span style="color:#6272a4">....... </span><span id="RLA" style="color:#f8f8f2">FR / EN</span></div>
-        <br>
-        <div id="RST" style="color:#6272a4">// running scan...</div>
+      <div class="TBOXD">
+        <div><span style="color:#6272a4">// &#8212;&#8212; OPERATOR PROFILE &#8212;&#8212;</span></div><br>
+        <div><span style="color:#8be9fd">Alias</span><span style="color:#6272a4">............. </span><span style="color:#f1fa8c">EYROX</span></div>
+        <div><span style="color:#8be9fd">Country</span><span style="color:#6272a4">........... </span><span style="color:#f8f8f2">France</span></div>
+        <div><span style="color:#8be9fd">Timezone</span><span style="color:#6272a4">.......... </span><span style="color:#f8f8f2">Europe/Paris (UTC+1/+2)</span></div>
+        <div><span style="color:#8be9fd">Language</span><span style="color:#6272a4">.......... </span><span style="color:#f8f8f2">FR / EN</span></div>
+        <div><span style="color:#8be9fd">Status</span><span style="color:#6272a4">............ </span><span style="color:#50fa7b">ONLINE</span></div>
+        <div><span style="color:#8be9fd">Open to</span><span style="color:#6272a4">........... </span><span style="color:#f8f8f2">Collabs &middot; Commission</span></div><br>
+        <div><span style="color:#6272a4">// Response time: fast &mdash; usually within 24h</span></div>
+        <div><span style="color:#6272a4">// Available for remote work worldwide</span></div>
       </div>
     </div>
-
     <div class="TBOX">
       <div class="CT"></div><div class="CB"></div>
-      <div class="TBOX-B">
+      <div class="TBOXB">
         <div class="DOTS"><div class="D DR"></div><div class="D DY"></div><div class="D DG"></div></div>
-        <span class="TBOX-T">connection_log.txt</span>
+        <span class="TBOXT">session_log.txt</span>
       </div>
-      <div class="TBOX-BD" style="font-size:12px;" id="LL"></div>
+      <div class="TBOXD" style="font-size:12px;" id="LL"></div>
     </div>
-
   </div>
 </section>
 
 <div class="DIV"></div>
 
-<!-- ══════ CONTACT ══════ -->
+<!-- CONTACT -->
 <section id="contact" class="SEC">
   <div class="SH2">
-    <span class="SH2-P">root@kali:~#</span>
-    <span class="SH2-T">ssh eyrox@social.network -v</span>
-    <div class="SH2-L"></div>
+    <span class="SH2P">root@kali:~#</span>
+    <span class="SH2T">ssh eyrox@social.network -v</span>
+    <div class="SH2L"></div>
   </div>
   <div style="font-size:12px;color:#6272a4;margin-bottom:28px;line-height:1.9;">
-    <div><span style="color:#8be9fd">→</span> Establishing encrypted connections...</div>
-    <div><span style="color:#50fa7b">✓</span> All channels reachable — select below.</div>
+    <div><span style="color:#8be9fd">&#8594;</span> Establishing encrypted connections...</div>
+    <div><span style="color:#50fa7b">&#10003;</span> All channels reachable &mdash; select below.</div>
   </div>
-
   <div class="CG">
     <a href="https://x.com/eyrox82" target="_blank" class="CC">
       <div class="CT"></div><div class="CB"></div>
-      <span class="CI" style="color:#f8f8f2">𝕏</span>
+      <span class="CI" style="color:#f8f8f2">&#120143;</span>
       <div><div class="CPF">Twitter / X</div><div class="CH">@eyrox82</div></div>
-      <span class="CA">→</span>
+      <span class="CA">&#8594;</span>
     </a>
     <a href="https://www.youtube.com/@Eyrox425/videos" target="_blank" class="CC">
       <div class="CT"></div><div class="CB"></div>
-      <span class="CI" style="color:#ff5555">▶</span>
+      <span class="CI" style="color:#ff5555">&#9654;</span>
       <div><div class="CPF">YouTube</div><div class="CH">@Eyrox425</div></div>
-      <span class="CA">→</span>
+      <span class="CA">&#8594;</span>
     </a>
     <div class="CC" style="cursor:default;">
       <div class="CT"></div><div class="CB"></div>
-      <span class="CI" style="color:#7289da">◈</span>
+      <span class="CI" style="color:#7289da">&#9672;</span>
       <div><div class="CPF">Discord</div><div class="CH">eyrox</div></div>
-      <span class="CA" style="opacity:.3">✓</span>
+      <span class="CA" style="opacity:.3">&#10003;</span>
     </div>
   </div>
-
   <div class="TBOX" style="margin-top:36px;">
-    <div class="TBOX-B">
+    <div class="TBOXB">
       <div class="DOTS"><div class="D DR"></div><div class="D DY"></div><div class="D DG"></div></div>
-      <span class="TBOX-T">availability.sh</span>
+      <span class="TBOXT">availability.sh</span>
     </div>
-    <div class="TBOX-BD" style="font-size:12px;">
-      <div><span style="color:#50fa7b">[+]</span> All channels <span style="color:#50fa7b">ONLINE</span> — replies within 24h</div>
-      <div><span style="color:#8be9fd">[*]</span> Open to: <span style="color:#f8f8f2">Collabs · Commission</span></div>
-      <br>
-      <div><span style="color:#6272a4">// Don't be a stranger — connect and let's create.</span></div>
+    <div class="TBOXD" style="font-size:12px;">
+      <div><span style="color:#50fa7b">[+]</span> All channels <span style="color:#50fa7b">ONLINE</span> &mdash; replies within 24h</div>
+      <div><span style="color:#8be9fd">[*]</span> Open to: <span style="color:#f8f8f2">Collabs &middot; Commission</span></div><br>
+      <div><span style="color:#6272a4">// Don't be a stranger &mdash; connect and let's create.</span></div>
     </div>
   </div>
 </section>
@@ -759,111 +460,124 @@ footer {
 <div class="DIV"></div>
 <footer>
   <span>EYROX // VFX &amp; WEB DEV</span>
-  <span style="color:#8be9fd">root@kali:~# <span class="BL">█</span></span>
+  <span style="color:#8be9fd">root@kali:~# <span class="BL">&#9608;</span></span>
   <span id="YR"></span>
 </footer>
 
 <script>
-// ── GUARD: hide boot after 4s max ──
-var bootTimer = setTimeout(function(){
+// SAFETY: force hide boot after 4s no matter what
+var safetyTimer = setTimeout(function() {
   var b = document.getElementById('BOOT');
-  if(b){ b.style.display='none'; startHero(); }
+  if (b && b.style.display !== 'none') {
+    b.style.display = 'none';
+    startHero();
+  }
 }, 4000);
 
-// ── CURSOR ──
-var C1 = document.getElementById('CUR');
-var C2 = document.getElementById('CUR2');
-document.addEventListener('mousemove', function(e){
-  C1.style.left = e.clientX+'px'; C1.style.top = e.clientY+'px';
-  C2.style.left = e.clientX+'px'; C2.style.top = e.clientY+'px';
+// CURSOR
+var C1 = document.getElementById('C1');
+var C2 = document.getElementById('C2');
+document.addEventListener('mousemove', function(e) {
+  C1.style.left = e.clientX + 'px';
+  C1.style.top  = e.clientY + 'px';
+  C2.style.left = e.clientX + 'px';
+  C2.style.top  = e.clientY + 'px';
 });
-document.querySelectorAll('a,button,.PC,.CC,.NV').forEach(function(el){
-  el.addEventListener('mouseenter', function(){ document.body.classList.add('hov'); });
-  el.addEventListener('mouseleave', function(){ document.body.classList.remove('hov'); });
+document.querySelectorAll('a, button, .PC, .CC, .NV').forEach(function(el) {
+  el.addEventListener('mouseenter', function() { document.body.classList.add('hov'); });
+  el.addEventListener('mouseleave', function() { document.body.classList.remove('hov'); });
 });
 
-// ── CLOCK ──
-function tick(){
+// CLOCK
+function tick() {
   document.getElementById('CLK').textContent =
-    new Date().toISOString().slice(0,19).replace('T',' ')+' UTC';
+    new Date().toISOString().slice(0, 19).replace('T', ' ') + ' UTC';
 }
-tick(); setInterval(tick, 1000);
+tick();
+setInterval(tick, 1000);
 document.getElementById('YR').textContent = '© ' + new Date().getFullYear();
 
-// ── MATRIX RAIN ──
+// MATRIX RAIN
 var cvs = document.getElementById('MC');
 var ctx = cvs.getContext('2d');
-function rszCvs(){
+function rszC() {
   cvs.width  = cvs.parentElement.offsetWidth  || window.innerWidth;
   cvs.height = cvs.parentElement.offsetHeight || window.innerHeight;
 }
-rszCvs(); window.addEventListener('resize', rszCvs);
-var CHR = '01アイウエオカキクケコ<>{}[]|/?#$%^&*ナニヌネノサシスセソ';
+rszC();
+window.addEventListener('resize', rszC);
+var CHR = '01<>{}[]|/?#$%^&*';
 var drops = [];
-function initD(){ drops = new Array(Math.floor(cvs.width/13)).fill(1); }
-initD(); window.addEventListener('resize', initD);
-setInterval(function(){
+function initD() { drops = []; for (var i = 0; i < Math.floor(cvs.width / 13); i++) drops.push(1); }
+initD();
+window.addEventListener('resize', initD);
+setInterval(function() {
   ctx.fillStyle = 'rgba(18,18,30,0.055)';
-  ctx.fillRect(0,0,cvs.width,cvs.height);
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
   ctx.fillStyle = '#8be9fd';
   ctx.font = '12px Consolas,monospace';
-  for(var i=0;i<drops.length;i++){
-    ctx.fillText(CHR[Math.floor(Math.random()*CHR.length)], i*13, drops[i]*13);
-    if(drops[i]*13 > cvs.height && Math.random() > .972) drops[i]=0;
+  for (var i = 0; i < drops.length; i++) {
+    ctx.fillText(CHR[Math.floor(Math.random() * CHR.length)], i * 13, drops[i] * 13);
+    if (drops[i] * 13 > cvs.height && Math.random() > 0.972) drops[i] = 0;
     drops[i]++;
   }
 }, 50);
 
-// ── BOOT SEQUENCE ──
+// BOOT SEQUENCE
 var BD = [
-  {t:'BIOS v3.0.1 — EyroxOS initializing...', c:'inf', d:110},
-  {t:'[    0.000000] Linux version 6.11.0-kali-amd64', c:'dim', d:65},
-  {t:'[    0.042000] Kernel: BOOT_IMAGE=/vmlinuz-kali', c:'dim', d:55},
-  {t:'[    0.289000] pci 0000:00:00.0: type 00 class 0x060000', c:'dim', d:50},
-  {t:'[    0.450000] Loading VFX kernel module...       OK', c:'ok', d:130},
-  {t:'[    0.602000] NET: Registered PF_INET6 protocol', c:'dim', d:55},
-  {t:'[    0.780000] Mounting /home/eyrox/portfolio...  done', c:'inf', d:90},
-  {t:'[    0.912000] Starting server :3000...           done', c:'ok', d:110},
-  {t:'[    1.104000] Loading project cache (7)...       done', c:'ok', d:90},
-  {t:'[    1.334000] WARNING: Extremely skilled creative detected', c:'wrn', d:170},
-  {t:'[    1.512000] All systems nominal.', c:'ok', d:80},
-  {t:'', c:'', d:100},
-  {t:'Kali GNU/Linux Rolling — root@kali', c:'wht', d:80},
-  {t:'Last login: today from 127.0.0.1', c:'dim', d:80},
-  {t:'', c:'', d:350},
+  { t: 'BIOS v3.0.1 - EyroxOS initializing...',               c: 'inf', d: 110 },
+  { t: '[    0.000000] Linux version 6.11.0-kali-amd64',       c: 'dim', d: 65  },
+  { t: '[    0.042000] Kernel: BOOT_IMAGE=/vmlinuz-kali',       c: 'dim', d: 55  },
+  { t: '[    0.289000] pci 0000:00:00.0: type 00 class 0x060000', c: 'dim', d: 50 },
+  { t: '[    0.450000] Loading VFX kernel module...       OK',  c: 'ok',  d: 130 },
+  { t: '[    0.602000] NET: Registered PF_INET6 protocol',      c: 'dim', d: 55  },
+  { t: '[    0.780000] Mounting /home/eyrox/portfolio...  done', c: 'inf', d: 90 },
+  { t: '[    0.912000] Starting server :3000...           done', c: 'ok',  d: 110 },
+  { t: '[    1.104000] Loading project cache (7)...       done', c: 'ok',  d: 90 },
+  { t: '[    1.334000] WARNING: Extremely skilled creative detected', c: 'wrn', d: 170 },
+  { t: '[    1.512000] All systems nominal.',                    c: 'ok',  d: 80  },
+  { t: '',                                                       c: '',    d: 100 },
+  { t: 'Kali GNU/Linux Rolling -- root@kali',                   c: 'wht', d: 80  },
+  { t: 'Last login: today from 127.0.0.1',                      c: 'dim', d: 80  },
+  { t: '',                                                       c: '',    d: 350 },
 ];
+
 var bc = document.getElementById('BL');
 var td = 200;
-BD.forEach(function(b){
-  var d = document.createElement('div');
-  d.className = 'bl ' + (b.c||'');
-  d.textContent = b.t;
-  bc.appendChild(d);
-  setTimeout(function(){ d.classList.add('v'); }, td);
-  td += b.d;
-});
-setTimeout(function(){
-  clearTimeout(bootTimer);
+for (var i = 0; i < BD.length; i++) {
+  (function(b, delay) {
+    var d = document.createElement('div');
+    d.className = 'bl ' + (b.c || '');
+    d.textContent = b.t;
+    bc.appendChild(d);
+    setTimeout(function() { d.classList.add('v'); }, delay);
+  })(BD[i], td);
+  td += BD[i].d;
+}
+
+setTimeout(function() {
+  clearTimeout(safetyTimer);
   var boot = document.getElementById('BOOT');
   boot.classList.add('hide');
-  setTimeout(function(){
+  setTimeout(function() {
     boot.style.display = 'none';
     startHero();
   }, 520);
 }, td + 150);
 
-// ── HERO TYPEWRITER + NMAP ──
-function startHero(){
+// HERO TYPEWRITER
+function startHero() {
   var cmd = 'nmap -sT --script/vfx -eyrox --open -A';
   var el  = document.getElementById('TCMD');
   var i   = 0;
-  var t   = setInterval(function(){
-    el.textContent = cmd.slice(0,i); i++;
-    if(i > cmd.length){ clearInterval(t); setTimeout(showNmap, 320); }
+  var t   = setInterval(function() {
+    el.textContent = cmd.slice(0, i);
+    i++;
+    if (i > cmd.length) { clearInterval(t); setTimeout(showNmap, 320); }
   }, 38);
 }
 
-function showNmap(){
+function showNmap() {
   var L = [
     '<span class="NI">Starting Nmap 7.95 ( https://nmap.org )</span>',
     '<span class="NI">Nmap scan report for <span style="color:#f8f8f2">eyrox.dev (127.0.0.1)</span></span>',
@@ -873,207 +587,197 @@ function showNmap(){
     '<span class="NP">80/tcp</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="NO">open</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="NS">youtube</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="NV2">@Eyrox425</span>',
     '<span class="NP">443/tcp</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="NO">open</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="NS">twitter/x</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="NV2">@eyrox82</span>',
     '<span class="NP">6660/tcp</span>&nbsp;&nbsp;&nbsp;<span class="NO">open</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="NS">discord</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="NV2">eyrox</span>',
-    '<span class="NP">1337/tcp</span>&nbsp;&nbsp;&nbsp;<span class="NO">open</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="NS">vfx-engine</span>&nbsp;&nbsp;&nbsp;<span class="NV2">v9.1.0-leet</span>',
+
     '<span class="NP">8080/tcp</span>&nbsp;&nbsp;&nbsp;<span class="NO">open</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="NS">web-dev</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="NV2">Node/JS</span>',
     '',
-    '<span class="NW">Service Info: Creator_OS 2.0 — threat level: EXTREME</span>',
-    '<span class="NI">Nmap done: 1 IP scanned in 0.42s</span>',
+    '<span class="NW">Service Info: Creator_OS 2.0 -- threat level: EXTREME</span>',
+    '<span class="NI">Nmap done: 1 Portfolio scanned in 0.42s</span>',
   ];
-  var c = document.getElementById('NM'); var delay = 0;
-  L.forEach(function(h){
-    var d = document.createElement('div'); d.className = 'NL'; d.innerHTML = h;
-    c.appendChild(d);
-    setTimeout(function(){ d.classList.add('V'); }, delay);
+  var c = document.getElementById('NM');
+  var delay = 0;
+  for (var i = 0; i < L.length; i++) {
+    (function(html, d) {
+      var el = document.createElement('div');
+      el.className = 'NL';
+      el.innerHTML = html;
+      c.appendChild(el);
+      setTimeout(function() { el.classList.add('V'); }, d);
+    })(L[i], delay);
     delay += 78;
-  });
+  }
 }
 
-// ── SKILLS ──
+// SKILLS
 var SK = [
-  {n:'Frontend',      p:90},
-  {n:'Backend',       p:80},
-  {n:'Luau',          p:92},
-  {n:'HTML',          p:95},
-  {n:'CSS',           p:88},
-  {n:'JavaScript',    p:87},
-  {n:'Bash',          p:75},
-  {n:'VFX on Roblox', p:97},
+  { n: 'Frontend',      p: 90 },
+  { n: 'Backend',       p: 80 },
+  { n: 'Luau',          p: 92 },
+  { n: 'HTML',          p: 95 },
+  { n: 'CSS',           p: 88 },
+  { n: 'JavaScript',    p: 87 },
+  { n: 'Bash',          p: 75 },
+  { n: 'VFX on Roblox', p: 97 },
 ];
 var sg = document.getElementById('SKG');
-SK.forEach(function(s, i){
-  var d = document.createElement('div'); d.className = 'SKC';
+for (var i = 0; i < SK.length; i++) {
+  var s = SK[i];
+  var d = document.createElement('div');
+  d.className = 'SKC';
   d.innerHTML =
-    '<div class="SKN">'+s.n+'</div>' +
-    '<div class="SKBB"><div class="SKB" id="SKB'+i+'" data-p="'+s.p+'"></div></div>' +
-    '<div class="SKP">'+s.p+'%</div>';
+    '<div class="SKN">' + s.n + '</div>' +
+    '<div class="SKBB"><div class="SKB" id="SKB' + i + '" data-p="' + s.p + '"></div></div>' +
+    '<div class="SKP">' + s.p + '%</div>';
   sg.appendChild(d);
-});
+}
 
-// ── PROJECTS ──
+// PROJECTS
 var PR = [
   { id:'001', type:'VIDEO / VFX',
-    title:'VFX Reel — YouTube Showcase',
+    title:'VFX Reel - YouTube Showcase',
     desc:'Full VFX production reel featuring compositing, motion design and visual effects.',
     ytId:'K-JQ7466-FI',
     link:'https://www.youtube.com/watch?v=K-JQ7466-FI', lbl:'Watch on YouTube' },
   { id:'002', type:'VFX / MOTION',
     title:'Latest VFX Drop',
-    desc:'Cutting-edge visual effects and motion design — latest work on X.',
+    desc:'Cutting-edge visual effects and motion design - latest work on X.',
     tw:true, link:'https://x.com/eyrox82/status/2028108886264140008', lbl:'View on X' },
   { id:'003', type:'VFX / ANIMATION',
-    title:'Motion Graphics — Project Alpha',
-    desc:'Visual effects & animation project showcasing compositing and rendering.',
+    title:'Motion Graphics - Project Alpha',
+    desc:'Visual effects and animation project showcasing compositing and rendering.',
     tw:true, link:'https://x.com/eyrox82/status/2010044012967940279', lbl:'View on X' },
   { id:'004', type:'VFX / 3D',
-    title:'VFX Experiment — Project Beta',
+    title:'VFX Experiment - Project Beta',
     desc:'3D visual effects experiment pushing real-time rendering limits.',
     tw:true, link:'https://x.com/eyrox82/status/2007154080096149829', lbl:'View on X' },
   { id:'005', type:'VFX / DESIGN',
-    title:'Visual Effects — Project Gamma',
+    title:'Visual Effects - Project Gamma',
     desc:'Advanced VFX: particle systems, post-processing and cinematic effects.',
     tw:true, link:'https://x.com/eyrox82/status/2006155278782255315', lbl:'View on X' },
   { id:'006', type:'MOTION / FX',
-    title:'FX Sequence — Project Delta',
+    title:'FX Sequence - Project Delta',
     desc:'Custom FX sequence combining multiple effects pipelines.',
     tw:true, link:'https://x.com/eyrox82/status/2006116767253348423', lbl:'View on X' },
   { id:'007', type:'VFX / RENDER',
-    title:'Effects Showcase — Project Epsilon',
+    title:'Effects Showcase - Project Epsilon',
     desc:'High-quality rendered VFX: textures, lighting and post-production.',
     tw:true, link:'https://x.com/eyrox82/status/2005781182496268772', lbl:'View on X' },
 ];
-var pg = document.getElementById('PG');
-PR.forEach(function(p){
-  var card = document.createElement('div'); card.className = 'PC';
-  var thumb = '';
-  if(p.ytId){
-    thumb =
-      '<div class="PTH">' +
-        '<img src="https://img.youtube.com/vi/'+p.ytId+'/maxresdefault.jpg"' +
-          ' onerror="this.src=\'https://img.youtube.com/vi/'+p.ytId+'/hqdefault.jpg\'"' +
-          ' alt="'+p.title+'" loading="lazy">' +
-        '<div class="POV"></div>' +
-        '<div class="PPL">&#9654;</div>' +
-      '</div>';
-  } else {
-    thumb =
-      '<div class="PTH">' +
-        '<div class="PPH">' +
-          '<div class="PPH-I">&#120143;</div>' +
-          '<div class="PPH-L">VFX Project #'+p.id+'</div>' +
-          '<div style="font-size:9px;color:#6272a4;letter-spacing:2px;margin-top:6px;">CLICK TO VIEW ON X</div>' +
-        '</div>' +
-        '<div class="POV"></div>' +
-        '<div class="PPL" style="font-size:16px">&#8594;</div>' +
-      '</div>';
-  }
-  card.innerHTML = thumb +
-    '<div class="PIN">' +
-      '<div class="PM"><span class="PT2">'+p.type+'</span><span class="PID">#'+p.id+'</span></div>' +
-      '<div class="PTI">'+p.title+'</div>' +
-      '<div class="PDE">'+p.desc+'</div>' +
-      '<a href="'+p.link+'" target="_blank" class="PLK" onclick="event.stopPropagation()">&#10551; '+p.lbl+'</a>' +
-    '</div>';
-  card.addEventListener('click', function(){
-    if(p.ytId) openMod('https://www.youtube.com/embed/'+p.ytId+'?autoplay=1&rel=0&modestbranding=1', p.title);
-    else window.open(p.link,'_blank');
-  });
-  pg.appendChild(card);
-});
 
-// ── MODAL ──
-var mod   = document.getElementById('MOD');
-var mfr   = document.getElementById('MFR');
-var mtit  = document.getElementById('MTIT');
-function openMod(src,title){
-  mfr.src = src; mtit.textContent = '▶  '+title;
-  mod.classList.add('open'); document.body.style.overflow='hidden';
+var pg = document.getElementById('PG');
+for (var i = 0; i < PR.length; i++) {
+  (function(p) {
+    var card = document.createElement('div');
+    card.className = 'PC';
+    var thumb = '';
+    if (p.ytId) {
+      thumb =
+        '<div class="PTH">' +
+          '<img src="https://img.youtube.com/vi/' + p.ytId + '/maxresdefault.jpg"' +
+               ' onerror="this.src=\'https://img.youtube.com/vi/' + p.ytId + '/hqdefault.jpg\'"' +
+               ' alt="' + p.title + '" loading="lazy">' +
+          '<div class="POV"></div>' +
+          '<div class="PPL">&#9654;</div>' +
+        '</div>';
+    } else {
+      thumb =
+        '<div class="PTH">' +
+          '<div class="PPH">' +
+            '<div class="PPHI">&#120143;</div>' +
+            '<div class="PPHL">VFX Project #' + p.id + '</div>' +
+            '<div style="font-size:9px;color:#6272a4;letter-spacing:2px;margin-top:6px;">CLICK TO VIEW ON X</div>' +
+          '</div>' +
+          '<div class="POV"></div>' +
+          '<div class="PPL" style="font-size:16px">&#8594;</div>' +
+        '</div>';
+    }
+    card.innerHTML = thumb +
+      '<div class="PIN">' +
+        '<div class="PM"><span class="PT2">' + p.type + '</span><span class="PID">#' + p.id + '</span></div>' +
+        '<div class="PTI">' + p.title + '</div>' +
+        '<div class="PDE">' + p.desc + '</div>' +
+        '<a href="' + p.link + '" target="_blank" class="PLK" onclick="event.stopPropagation()">&#10551; ' + p.lbl + '</a>' +
+      '</div>';
+    card.addEventListener('click', function() {
+      if (p.ytId) openMod('https://www.youtube.com/embed/' + p.ytId + '?autoplay=1&rel=0&modestbranding=1', p.title);
+      else window.open(p.link, '_blank');
+    });
+    pg.appendChild(card);
+  })(PR[i]);
 }
-function closeMod(){
-  mfr.src = 'about:blank'; mod.classList.remove('open');
-  document.body.style.overflow='';
+
+// MODAL
+var mod  = document.getElementById('MOD');
+var mfr  = document.getElementById('MFR');
+var mtit = document.getElementById('MTIT');
+function openMod(src, title) {
+  mfr.src = src;
+  mtit.textContent = '\u25B6  ' + title;
+  mod.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMod() {
+  mfr.src = 'about:blank';
+  mod.classList.remove('open');
+  document.body.style.overflow = '';
 }
 document.getElementById('MCL').addEventListener('click', closeMod);
-mod.addEventListener('click', function(e){ if(e.target===mod) closeMod(); });
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMod(); });
+mod.addEventListener('click', function(e) { if (e.target === mod) closeMod(); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMod(); });
 
-// ── SKILL BARS (IntersectionObserver) ──
-var obs = new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting && e.target.id==='SKG'){
-      document.querySelectorAll('.SKB').forEach(function(b,i){
-        setTimeout(function(){ b.style.width = b.dataset.p+'%'; }, i*90);
-      });
-      obs.unobserve(e.target);
+// SKILL BARS
+var obs = new IntersectionObserver(function(entries) {
+  for (var i = 0; i < entries.length; i++) {
+    if (entries[i].isIntersecting && entries[i].target.id === 'SKG') {
+      var bars = document.querySelectorAll('.SKB');
+      for (var j = 0; j < bars.length; j++) {
+        (function(bar, delay) {
+          setTimeout(function() { bar.style.width = bar.getAttribute('data-p') + '%'; }, delay);
+        })(bars[j], j * 90);
+      }
+      obs.unobserve(entries[i].target);
     }
-  });
-},{threshold:0.2});
+  }
+}, { threshold: 0.2 });
 obs.observe(document.getElementById('SKG'));
 
-// ── RECON / NETWORK ──
-(function(){
+// SESSION LOG ANIMATION
+(function() {
   var ll = document.getElementById('LL');
-  function addLog(html){
-    var d = document.createElement('div'); d.innerHTML = html; ll.appendChild(d);
+  function addLog(html) {
+    var d = document.createElement('div');
+    d.innerHTML = html;
+    ll.appendChild(d);
   }
-  function ts(){ return new Date().toISOString().slice(11,19); }
-
-  addLog('<span style="color:#6272a4">// ─── LIVE CONNECTION LOG ───</span><br>');
-  setTimeout(function(){ addLog('<span style="color:#6272a4">['+ts()+']</span> <span style="color:#8be9fd">SYN</span> packet received from remote host'); }, 400);
-  setTimeout(function(){ addLog('<span style="color:#6272a4">['+ts()+']</span> <span style="color:#50fa7b">ACK</span> connection established'); }, 1000);
-  setTimeout(function(){ addLog('<span style="color:#6272a4">['+ts()+']</span> <span style="color:#f1fa8c">INF</span> querying geolocation API...'); }, 1700);
-
-  // client-side data
-  document.getElementById('RSC').textContent = screen.width+'x'+screen.height;
-  var ua = navigator.userAgent;
-  var br = 'Unknown';
-  if(ua.indexOf('OPR')>-1||ua.indexOf('Opera')>-1) br='Opera GX';
-  else if(ua.indexOf('Firefox')>-1) br='Firefox';
-  else if(ua.indexOf('Edg')>-1) br='Edge';
-  else if(ua.indexOf('Chrome')>-1) br='Chrome';
-  else if(ua.indexOf('Safari')>-1) br='Safari';
-  document.getElementById('RBR').textContent = br;
-
-  // IP fetch
-  fetch('https://ipapi.co/json/')
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      setTimeout(function(){
-        document.getElementById('RIP').textContent  = d.ip || 'masked';
-        document.getElementById('RISP').textContent = d.org || 'unknown';
-        document.getElementById('RCI').textContent  = d.city || '?';
-        document.getElementById('RTZ').textContent  = d.timezone || '?';
-        document.getElementById('RST').textContent  = '// recon complete — stay sharp.';
-        document.getElementById('RST').style.color  = '#50fa7b';
-        setTimeout(function(){ addLog('<span style="color:#6272a4">['+ts()+']</span> <span style="color:#50fa7b">OK </span> IP resolved: <span style="color:#f1fa8c">'+d.ip+'</span>'); }, 100);
-        setTimeout(function(){ addLog('<span style="color:#6272a4">['+ts()+']</span> <span style="color:#50fa7b">OK </span> Location: '+d.city+', '+d.country_name); }, 500);
-        setTimeout(function(){ addLog('<span style="color:#6272a4">['+ts()+']</span> <span style="color:#ff79c6">LOG</span> visitor fingerprint saved'); }, 1000);
-        setTimeout(function(){ addLog('<span style="color:#6272a4">['+ts()+']</span> <span style="color:#6272a4">---</span> session active — monitoring...'); }, 1600);
-      }, 800);
-    })
-    .catch(function(){
-      document.getElementById('RIP').textContent = 'blocked / VPN';
-      document.getElementById('RIP').style.color = '#ff5555';
-      document.getElementById('RST').textContent = '// scan blocked — firewall active.';
-      addLog('<span style="color:#6272a4">['+ts()+']</span> <span style="color:#ff5555">ERR</span> geolocation blocked');
-    });
+  function ts() { return new Date().toISOString().slice(11, 19); }
+  addLog('<span style="color:#6272a4">// ---- SESSION LOG ----</span><br>');
+  setTimeout(function() { addLog('<span style="color:#6272a4">[' + ts() + ']</span> <span style="color:#8be9fd">SYN</span> new visitor connected'); }, 500);
+  setTimeout(function() { addLog('<span style="color:#6272a4">[' + ts() + ']</span> <span style="color:#50fa7b">ACK</span> handshake complete'); }, 1100);
+  setTimeout(function() { addLog('<span style="color:#6272a4">[' + ts() + ']</span> <span style="color:#f1fa8c">INF</span> serving portfolio assets...'); }, 1800);
+  setTimeout(function() { addLog('<span style="color:#6272a4">[' + ts() + ']</span> <span style="color:#50fa7b">OK&nbsp;</span> all assets loaded'); }, 2600);
+  setTimeout(function() { addLog('<span style="color:#6272a4">[' + ts() + ']</span> <span style="color:#ff79c6">LOG</span> operator: EYROX / France / UTC+1'); }, 3400);
+  setTimeout(function() { addLog('<span style="color:#6272a4">[' + ts() + ']</span> <span style="color:#6272a4">---</span> session active'); }, 4200);
 })();
 
-// ── SCROLL NAV ──
-var SIDS = ['hero','about','skills','work','recon','contact'];
+// SCROLL NAV
+var SIDS = ['hero', 'about', 'skills', 'work', 'recon', 'contact'];
 var NVS  = document.querySelectorAll('.NV');
-window.addEventListener('scroll', function(){
+window.addEventListener('scroll', function() {
   var sy = window.scrollY;
-  SIDS.forEach(function(id, i){
-    var el = document.getElementById(id); if(!el) return;
+  for (var i = 0; i < SIDS.length; i++) {
+    var el = document.getElementById(SIDS[i]);
+    if (!el) continue;
     var top = el.offsetTop - 160;
     var bot = top + el.offsetHeight;
-    if(sy >= top && sy < bot){
-      NVS.forEach(function(n){ n.classList.remove('A'); });
-      if(NVS[i]) NVS[i].classList.add('A');
+    if (sy >= top && sy < bot) {
+      for (var j = 0; j < NVS.length; j++) NVS[j].classList.remove('A');
+      if (NVS[i]) NVS[i].classList.add('A');
     }
-  });
+  }
 });
-function GT(id){ var el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); }
+function GT(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 </body>
 </html>
